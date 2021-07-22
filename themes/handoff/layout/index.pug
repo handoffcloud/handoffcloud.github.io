@@ -1,0 +1,26 @@
+extends partial/layout.pug
+
+block container
+    .article-list
+        section
+            .page-header
+                .col-lg-10.col-xl-8.offset-lg-1.offset-xl-2
+                    .text-left.intro
+                        h1.text-center handoff blog
+
+        .container
+            .row
+                .col 
+                    .row.articles
+                        include mixins/post.pug
+                        +posts()
+
+                .col-sm-3
+                    h2.text-center Follow &nbsp;
+                        a(href="https://twitter.com/handoffcloud") &#64;handoffcloud
+                        span &nbsp; on Twitter
+                    <a class="twitter-timeline" data-width="360" data-height="1200" href="https://twitter.com/handoffcloud?ref_src=twsrc%5Etfw">Tweets by handoff</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+block pagination
+    include mixins/paginator.pug
+    +home()

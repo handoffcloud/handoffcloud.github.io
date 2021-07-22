@@ -1,0 +1,33 @@
+meta(charset="utf-8")
+meta(name="X-UA-Compatible", content="IE=edge")
+
+- var title_ = page.title || theme.title || config.title
+- var description = page.summary ? page.summary: theme.description ? theme.description : config.description ? config.description : 'Bring any data to where decisions take place without hiring a data engineer'
+- var image_ = page.image || "https://handoff.cloud/assets/img/handoff.png"
+
+title 
+    block site_title
+        = title_
+block description
+    meta(name="description", content=description)
+
+meta(name="twitter:description" content=description)
+meta(name="twitter:title" content=title_)
+meta(name="twitter:card" content="summary")
+meta(property="og:type" content="article")
+meta(name="description" content=description)
+meta(property="og:image" content=image_)
+meta(property="og:title" content=title_)
+meta(name="twitter:image" content=image_)
+
+link(rel="stylesheet", href=url_for("css/style.css"))
+
+include head.html
+if page.canonical
+    link(data-rh="true" rel="canonical" href=page.canonical)
+
+!= open_graph()
+
+
+- var xml = config.url + '/atom.xml'
+    link(rel="search", type="application/opensearchdescription+xml", href=xml, title=config.title)

@@ -1,0 +1,26 @@
+nav.navbar.navbar-light.navbar-expand-md.navigation-clean-button
+    .container
+        a.navbar-brand(href='https://handoff.cloud', target="_self")=""
+
+        div.text-center
+            a.navbar-brand(href="#")
+                img.navbar-brand(src="https://handoff.cloud/assets/img/handoff-white.png")
+                span.text-center
+                    strong=theme.title
+
+        button.navbar-toggler(data-toggle="collapse", data-target="#navcol-1")
+            span.sr-only Toggle navigation
+            span.navbar-toggler-icon
+        .collapse.navbar-collapse(id="navcol-1")
+            ul.nav.navbar-nav.mr-auto
+                - var current_url = _.isUndefined(page.current_url) ? page.path.match(/(.+)\//)[0] : page.current_url
+                - var re = /^(http|https):\/\/*/gi;
+                - var tar = re.test(value) ? "_self" : "_self"
+                each value, key in theme.menu
+                    li.nav-item(role="presentation")
+                        - var re = /^(http|https):\/\/*/gi;
+                        - var tar = re.test(value) ? "_self" : "_self"
+                        // - var tar = re.test(value) ? "_blank" : "_self"
+                        - var act = !re.test(value) && "/" + current_url === value
+                        a.nav-link(class={active: act} href=url_for(value) target=tar)
+                            != __(key)

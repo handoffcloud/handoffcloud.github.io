@@ -1,0 +1,53 @@
+mixin postInfo(item)
+    .post-info
+        if item.image
+            img.img-fluid(href=item.from target="_blank" alt-text=item.title src=item.image)
+        if item.from && (is_home() || is_post())
+            a.post-from(href=item.from target="_blank" title=item.from)
+        if item.summary
+            this=item.summary
+        //- != full_date(item.date, config.date_format)
+
+//- Index Page
+mixin posts()
+    .col-sm-5.item 
+        - page.posts.each(function (item) {
+            article.post-block
+                h3.name
+                    a.post-title-link(href= url_for(item.path))
+                        != item.title
+                +postInfo(item)
+                .post-content
+                    != item.excerpt
+                a.read-more(href= url_for(item.path))!= __('more')
+        - })
+
+//- Archive Page
+mixin postList()
+    .archive
+        - var year = 0;
+        - var change = false;
+        - page.posts.each(function (item) {
+            - var itemYear = date(item.date, 'YYYY') - 0;
+            - change = year !== itemYear;
+            - year = change ? itemYear : year;
+            if change 
+                h2.archive-year!= year
+            .post-item
+                +postInfo(item)
+                div.post-title
+                    if item.from && is_archive()
+                        a.post-from(href=item.from target="_blank" title=item.from) [翻译 · 查看原文]
+                    a.post-title-link(href= url_for(item.path)) 
+                        != item.title
+
+        - })
+
+//- Post Page
+mixin post(page)
+    .intro
+        h1.text-center
+            != page.title
+    // +postInfo(page)
+    .post-content
+        != page.content

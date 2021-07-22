@@ -1,0 +1,131 @@
+@charset "utf-8";
+/* normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+h1 {
+  margin-top: 20px !important;
+}
+
+a {
+  color: #00599C !important;
+}
+
+a.navbar-brand {
+  color: white !important;
+}
+
+a.btn {
+  color: white !important;
+}
+
+.navbar-brand {
+  font-size: 1em !important;
+}
+
+img.navbar-brand {
+  height: 50px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+nav.navbar {
+  background: linear-gradient(90deg, #00599C 99%, #00599c);
+  color: white;
+}
+
+a.nav-link {
+  color: white !important;
+}
+
+figure.highlight.plain {
+  background-color: black;
+}
+
+pre {
+  padding: 10px 0 0 10px;
+  color: #aaddff !important;
+  white-space: pre-wrap;       /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+.article-list img {
+  height: 175px;
+  width: auto;
+}
+
+.articles img {
+  height: 175px;
+  width: auto;
+}
+
+.articles .item .name {
+  font-weight: 700;
+  font-size: 16px;
+  margin-top: 20px;
+  color: inherit;
+}
+
+.articles a {
+  color: #000;
+}
+
+.article-clean img {
+  margin-top: 20px;
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+  border-style: none;
+}
+
+.article-clean {
+  font-size: 20px;
+  line-height: 2rem;
+}
+
+.copyright p {
+  color: #868e96;
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.footer footer {
+  padding: 64px auto 64px;
+}
+
+.footer a {
+  color: white !important;
+}
+
+.page-header {
+  color: #00599C;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 15px;
+}
+
+.post-content strong {
+  font-style: italic;
+  font-weight: bolder;
+
+}
+
+.post-list h2 {
+  font-size: 1.5rem;
+}
+
+.post-list a {
+  color: #000;
+}
+
+.services {
+  padding-bottom: 40px;
+}
+
