@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Go schemaless: ELT with Google Cloud Storage and BigQuery · handoff</title><meta name="description" content="Go schemaless: ELT with Google Cloud Storage and BigQuery - handoff"><meta name="twitter:description" content="Bring any data to where decisions take place without hiring a data engineer"><meta name="twitter:title" content="Go schemaless: ELT with Google Cloud Storage and BigQuery"><meta name="twitter:card" content="summary"><meta property="og:type" content="article"><meta name="description" content="Bring any data to where decisions take place without hiring a data engineer"><meta property="og:image" content="/images/earthquakes.png"><meta property="og:title" content="Go schemaless: ELT with Google Cloud Storage and BigQuery"><meta name="twitter:image" content="/images/earthquakes.png"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="https://handoff.cloud/assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+<link rel="stylesheet" href="https://handoff.cloud/assets/fonts/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+<link rel="apple-touch-icon" sizes="57x57" href="https://handoff.cloud/assets/favicon/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="https://handoff.cloud/assets/favicon/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="https://handoff.cloud/assets/favicon/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="https://handoff.cloud/assets/favicon/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="https://handoff.cloud/assets/favicon/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="https://handoff.cloud/assets/favicon/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="https://handoff.cloud/assets/favicon/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="https://handoff.cloud/assets/favicon/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://handoff.cloud/assets/favicon/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="https://handoff.cloud/assets/favicon/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://handoff.cloud/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://handoff.cloud/assets/favicon/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://handoff.cloud/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="https://handoff.cloud/assets/favicon/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WEFXTPYJ54"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WEFXTPYJ54');
+</script>
+
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1121177037925150');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1121177037925150&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+<link data-rh="true" rel="canonical" href="https://articles.anelen.co/elt-google-cloud-storage-bigquery/"><meta name="description" content="The image above, generated with the data in this article,is a map showing the location and magnitude (bubble size) of earthquakes on June 24, 2020, based on the USGS Earthquake event data. Load first">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go schemaless: ELT with Google Cloud Storage and BigQuery">
+<meta property="og:url" content="http://handoff.cloud/2020/06/25/elt-google-cloud-storage-bigquery/index.html">
+<meta property="og:site_name" content="handoff">
+<meta property="og:description" content="The image above, generated with the data in this article,is a map showing the location and magnitude (bubble size) of earthquakes on June 24, 2020, based on the USGS Earthquake event data. Load first">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://handoff.cloud/images/earthquakes.png">
+<meta property="og:image" content="http://handoff.cloud/images/usgs_unparsed_sample_bigquery.png">
+<meta property="og:image" content="http://handoff.cloud/images/usgs_events_view.png">
+<meta property="og:image" content="http://handoff.cloud/images/usgs_parsed_events_sample.png">
+<meta property="og:image" content="http://handoff.cloud/images/usgs_events_map.png">
+<meta property="og:image" content="http://handoff.cloud/images/earthquakes_20200624.gif">
+<meta property="article:published_time" content="2020-06-25T13:12:36.000Z">
+<meta property="article:modified_time" content="2021-07-22T06:13:11.132Z">
+<meta property="article:author" content="handoff">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://handoff.cloud/images/earthquakes.png"><link rel="search" type="application/opensearchdescription+xml" href="http://handoff.cloud/atom.xml" title="handoff"><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="handoff" type="application/atom+xml">
+</head><body><div class="modal fade" role="dialog" tabindex="-1" id="cookieconsent">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><strong>We are care about privacy and rights</strong></h4>
+        <button type="button" class="close hidden" data-dismiss="modal" aria-label="Close" id="acceptcookie1" style="visibility: hidden;"><span aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <p>So we want to let you know that we use cookies to track web visit data like many other commercial websites. We use them for a historical research to improve the visitor and customer experience. If you continue using our website, we'll assume that you agree to receive all cookies on this website.&nbsp;<a href="https://www.iubenda.com/privacy-policy/8056022" target="_blank" rel="noopener">Learn&nbsp;more</a></p>
+      </div>
+      <div class="modal-footer" style="background-image: url('https://anelen.co/assets/img/logo.png');background-size: contain;background-repeat: no-repeat;background-position: 10% 10%;margin: 15px;border-top: 0px;">
+        <button class="btn btn-primary" id="acceptcookie2" data-dismiss="modal" type="button">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+<nav class="navbar navbar-light navbar-expand-md navigation-clean-button"><div class="container"><a class="navbar-brand" href="https://handoff.cloud" target="_self"></a><div class="text-center"><a class="navbar-brand" href="#"><img class="navbar-brand" src="https://handoff.cloud/assets/img/handoff-white.png"><span class="text-center"><strong>handoff</strong></span></a></div><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="navcol-1"><ul class="nav navbar-nav mr-auto"><li class="nav-item" role="presentation"><!-- - var tar = re.test(value) ? "_blank" : "_self"--><a class="nav-link" href="https://handoff.cloud/price.html" target="_self">Pricing</a></li><li class="nav-item" role="presentation"><!-- - var tar = re.test(value) ? "_blank" : "_self"--><a class="nav-link" href="https://dev.handoff.cloud" target="_self">Open Source</a></li><li class="nav-item" role="presentation"><!-- - var tar = re.test(value) ? "_blank" : "_self"--><a class="nav-link" href="/" target="_self">Blog</a></li></ul></div></div></nav><div class="article-clean"><div class="container"><div class="row"> </div><div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2"><div class="intro"><h1 class="text-center">Go schemaless: ELT with Google Cloud Storage and BigQuery</h1></div><!-- +postInfo(page)--><div class="post-content"><p><img src="/images/earthquakes.png" alt="USGS earthquake events map"></p>
+<p>The image above, generated with the data in this article,<br>is a map showing the location and magnitude (bubble size) of earthquakes on June 24, 2020, based on the USGS Earthquake event data.</p>
+<h2 id="Load-first-Worry-about-schema-later"><a href="#Load-first-Worry-about-schema-later" class="headerlink" title="Load first. Worry about schema later."></a>Load first. Worry about schema later.</h2><p>When we load the data to a data warehouse, we usually<br><a href="https://cloud.google.com/bigquery/docs/schemas" target="_blank" rel="noopener">specify the schema</a><br>upfront.<br>What if we can first load the data without worrying about the schema,<br>and format the data on the data warehouse?</p>
+<p>In a typical ETL (Extract, Transform, and Load) framework, the data is</p>
+<ol>
+<li>Extracted from the source.</li>
+<li>Transformed. The transformation includes formatting to a pre-defined schema.</li>
+<li>Loaded to a data store such as a data warehouse.</li>
+</ol>
+<p>The advantages of doing ELT (Extract, Load, and Transform) instead of include:</p>
+<ol>
+<li>The extraction process won’t have to change when the schema changes.</li>
+<li>The transformation process can take advantage of the massively-parallel execution by the modern data warehouse.</li>
+</ol>
+<p>In this post, I would like to demonstrate the business impact, especially with speed, when we adopt ELT approach.</p>
+<h2 id="ELT-with-BigQuery-and-Cloud-Storage"><a href="#ELT-with-BigQuery-and-Cloud-Storage" class="headerlink" title="ELT with BigQuery and Cloud Storage"></a>ELT with BigQuery and Cloud Storage</h2><p>In Google Cloud Platform, it is very easy to do ELT with<br><a href="https://cloud.netapp.com/ma-gcp-plp-premium-google-cloud-storage" target="_blank" rel="noopener">Cloud Storage</a><br>and <a href="https://cloud.google.com/bigquery" target="_blank" rel="noopener">BigQuery</a>. Using GCS and BigQuery, Felipe Hoffa demonstrated a lazy-loading of half a trillion Wikipedia page views.<br>(His articles can be found <a href="https://cloud.google.com/blog/products/gcp/bigquery-lazy-data-loading-sql-data-languages-ddl-and-dml-partitions-and-half-a-trillion-wikipedia-pageviews" target="_blank" rel="noopener">here</a> and <a href="https://medium.com/google-cloud/bigquery-lazy-data-loading-ddl-dml-partitions-and-half-a-trillion-wikipedia-pageviews-cd3eacd657b6" target="_blank" rel="noopener">here</a>)</p>
+<p>In his post, Hoffa loaded the super large set of files with a simple format (space-separated) parsing with <code>REGEXP_EXTRACT</code> function.<br>I will use<br><a href="https://earthquake.usgs.gov/fdsnws/event/1/" target="_blank" rel="noopener">the USGS Earthquake event data</a> as an example dataset. The earthquake event data is a newline-separated JSON file that looks like this:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;type&quot;:&quot;Feature&quot;,</span><br><span class="line">  &quot;properties&quot;:&#123;</span><br><span class="line">    &quot;mag&quot;:1.1000000000000001,</span><br><span class="line">    &quot;place&quot;:&quot;117km NW of Talkeetna, Alaska&quot;,</span><br><span class="line">    &quot;time&quot;:1388620046501,</span><br><span class="line">    &quot;updated&quot;:1558392330681,</span><br><span class="line">    &quot;tz&quot;:-540,</span><br><span class="line">    ...</span><br><span class="line">    &quot;type&quot;:&quot;earthquake&quot;,</span><br><span class="line">    &quot;title&quot;:&quot;M 1.1 - 117km NW of Talkeetna, Alaska&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;geometry&quot;:&#123;</span><br><span class="line">    &quot;type&quot;:&quot;Point&quot;,</span><br><span class="line">    &quot;coordinates&quot;:[</span><br><span class="line">      -151.64590000000001,</span><br><span class="line">      63.101999999999997,</span><br><span class="line">      14.1</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;id&quot;:&quot;ak01421ig3u&quot;</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">  &quot;type&quot;:&quot;Feature&quot;,</span><br><span class="line">  &quot;properties&quot;:&#123;</span><br><span class="line">    &quot;mag&quot;:1.2,</span><br><span class="line">    &quot;place&quot;:&quot;6km SSW of Big Lake, Alaska&quot;,</span><br><span class="line">    &quot;time&quot;:1388619956476,</span><br><span class="line">    &quot;updated&quot;:1558392330249,</span><br><span class="line">    &quot;tz&quot;:-540,</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    &quot;type&quot;:&quot;earthquake&quot;,</span><br><span class="line">    &quot;title&quot;:&quot;M 1.2 - 6km SSW of Big Lake, Alaska&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;geometry&quot;:&#123;</span><br><span class="line">    &quot;type&quot;:&quot;Point&quot;,</span><br><span class="line">    &quot;coordinates&quot;:[</span><br><span class="line">      -150.01650000000001,</span><br><span class="line">      61.458100000000002,</span><br><span class="line">      44.600000000000001</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;id&quot;:&quot;ak01421i2zj&quot;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<h2 id="stdin-to-GCS"><a href="#stdin-to-GCS" class="headerlink" title="stdin to GCS"></a>stdin to GCS</h2><p>I wrote <a href="https://github.com/anelendata/target_gcs" target="_blank" rel="noopener">target_gcs</a>,<br>a Python program that takes stdin and writes out to a Cloud Storage location. It is easy to install via pip:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 -m venv .&#x2F;venv</span><br><span class="line">source .&#x2F;venv&#x2F;bin&#x2F;activate</span><br><span class="line">pip install https:&#x2F;&#x2F;github.com&#x2F;anelendata&#x2F;target_gcs&#x2F;tarball&#x2F;master</span><br></pre></td></tr></table></figure>
+
+<p>Then follow the <a href="https://github.com/anelendata/target_gcs/blob/master/README.md#configure" target="_blank" rel="noopener">instruction</a> to configure the Google Cloud Platform project and data location.</p>
+<p>After the simple set up, you can run</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl &quot;https:&#x2F;&#x2F;earthquake.usgs.gov&#x2F;fdsnws&#x2F;event&#x2F;1&#x2F;query?format&#x3D;geojson&amp;starttime&#x3D;2020-06-24&amp;endtime&#x3D;2020-06-25&quot; | \</span><br><span class="line">target_gcs -c .&#x2F;your-config.json</span><br></pre></td></tr></table></figure>
+
+<p>to get the data loaded on Cloud Storage.<br>In this simple example, the USGS data is fetched by <code>curl</code> command,<br>and the data is written out to stdout.<br>target_gcs receives the data through pipe (<code>|</code>) and writes out to GCS.</p>
+<h2 id="GCS-to-BigQuery"><a href="#GCS-to-BigQuery" class="headerlink" title="GCS to BigQuery"></a>GCS to BigQuery</h2><p>After the data is loaded to Cloud Storage, it’s time to create a table on BigQuery.<br>For this, we can create an <a href="https://cloud.google.com/bigquery/docs/hive-partitioned-loads-gcs" target="_blank" rel="noopener">externally partitioned table</a><br>with the <a href="https://github.com/anelendata/target_gcs/blob/master/create_schemaless_table.py" target="_blank" rel="noopener">Python script</a> I provided (*):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">python create_schemaless_table.py \</span><br><span class="line">  -p your-project-id \</span><br><span class="line">  -g gs:&#x2F;&#x2F;your-bucket&#x2F;your-dataset \</span><br><span class="line">  -d your-dataset-name \</span><br><span class="line">  -t your-table-name</span><br></pre></td></tr></table></figure>
+
+<p>In my case, I set the target dataset name to <code>gcs_partitioned</code><br>and table name to <code>usgs_events_unparsed</code>.</p>
+<p>(*) Note: If the JSON schema in the data is stable and consistent, it makes more sense to load in<br><a href="https://cloud.google.com/bigquery/docs/loading-data-cloud-storage-json" target="_blank" rel="noopener">the standard way of loading JSON data</a>.<br>In the method in this article is advantageous when you have JSON record whose set of keys are inconsistent among records.<br>I also had a case where I needed to first search for all the keys present in the data, then flatten/unwrap/unpivot the data into a long format.</p>
+<h2 id="Unstructured-data-on-BigQuery"><a href="#Unstructured-data-on-BigQuery" class="headerlink" title="Unstructured data on BigQuery"></a>Unstructured data on BigQuery</h2><p>Let’s query the unstructured data.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM &#96;gcs_partitioned.usgs_events_unparsed&#96;</span><br><span class="line">WHERE date BETWEEN DATE &#39;2020-06-24&#39; AND DATE &#39;2020-06-25&#39; LIMIT 10</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/usgs_unparsed_sample_bigquery.png" alt=""></p>
+<p>You can see <code>line</code> as the raw JSON string. You also see columns such as <code>version</code>, <code>format</code>, and <code>date</code>.<br>They are from the GCS file partition information. By using those keys, we can limit the total data scanned with a query.<br>In fact, the Python script we used to create the BigQuery table from GCS set the option to always require the partition filter in the query.<br>This is a good practice to avoid running a costly query by accident. (BigQuery costs $5 per TB data scanned.)</p>
+<h2 id="Extract-the-fields-from-JSON-to-create-a-structured-view"><a href="#Extract-the-fields-from-JSON-to-create-a-structured-view" class="headerlink" title="Extract the fields from JSON to create a structured view"></a>Extract the fields from JSON to create a structured view</h2><p>We can create a view that has the structure from the unstructured table:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CREATE VIEW &#96;views.usgs_events&#96; AS (</span><br><span class="line">  SELECT</span><br><span class="line">    STRUCT(</span><br><span class="line">      TIMESTAMP_MILLIS(</span><br><span class="line">         CAST(JSON_EXTRACT(line,</span><br><span class="line">          &#39;$.properties.time&#39;) AS INT64)) AS time,</span><br><span class="line">      CAST(JSON_EXTRACT(line,</span><br><span class="line">          &#39;$.properties.tz&#39;) AS INT64) AS tz,</span><br><span class="line">      CAST(JSON_EXTRACT(line,</span><br><span class="line">          &#39;$.properties.mag&#39;) AS FLOAT64) AS mag,</span><br><span class="line">      TRIM(JSON_EXTRACT(line,</span><br><span class="line">          &#39;$.properties.place&#39;)) AS place ) AS properties,</span><br><span class="line">      CONCAT(JSON_EXTRACT_ARRAY(line, &#39;$.geometry.coordinates&#39;)[OFFSET(1)], &#39;,&#39;,</span><br><span class="line">             JSON_EXTRACT_ARRAY(line, &#39;$.geometry.coordinates&#39;)[OFFSET(0)]) AS lat_lng,</span><br><span class="line">    date AS etl_date</span><br><span class="line">  FROM &#96;gcs_partitioned.usgs_events_unparsed&#96;</span><br><span class="line">  WHERE JSON_EXTRACT(line, &#39;$.type&#39;) &#x3D; &#39;&quot;Feature&quot;&#39;</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+
+<p>Here, I’m using functions such as <code>JSON_EXTRACT</code> and <code>JSON_EXTRACT_ARRAY</code> to extract the values from the nested field to create the flat table.<br>I’m using <code>CAST</code> function to convert the extracted string into the appropriate data types:</p>
+<p><img src="/images/usgs_events_view.png" alt=""></p>
+<p>Note that latitude and longitude are concatenated as a comma-separated string for the next step.</p>
+<p>Also note that I renamed <code>date</code> partition field to <code>etl_date</code>.<br>The view inherits the partition filter requirement so we can avoid any accident of scanning the entire dataset by accident:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM &#96;views.usgs_events&#96;</span><br><span class="line">WHERE etl_date BETWEEN DATE &#39;2020-06-24&#39; and DATE &#39;2020-06-25&#39;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/usgs_parsed_events_sample.png" alt=""></p>
+<p>Once the data is formatted, it is straightforward to visualize it on Google Data Studio:</p>
+<p><img src="/images/usgs_events_map.png" alt=""></p>
+<p>Here, Google Maps are selected as the chart type.<br><code>lag_lng</code> is used for bubble location,<br>and <code>property.mag</code> is used as the bubble size.</p>
+<h2 id="ELT-Simple-and-powerful"><a href="#ELT-Simple-and-powerful" class="headerlink" title="ELT: Simple and powerful"></a>ELT: Simple and powerful</h2><p>In this post, I extracted the data simply with curl command without worrying about the file format or schema. The data was just dumped to Cloud Storage.<br>Then I created an externally partitioned table. Here again, I did not care to specify a schema.<br>At the very last step, I extracted the values from the raw strings and saved them as a structured view. I did so just by writing a SQL.<br>I could extract what I want with <code>JSON_EXTRACT</code> function for newline-separated JSON records. <code>REGEXP_EXTRACT</code> function would be useful for other types of file formats.</p>
+<p>The parallelization of the query execution comes free, thanks to BigQuery.<br>Just imagine how slow the process would be if I had to</p>
+<ol>
+<li>Specify the schema.</li>
+<li>Write the transformation logic.</li>
+<li>Configure the parallel processing for the transformation process by myself.</li>
+</ol>
+<p>…before loading the data to the data warehouse.<br>What if the raw data’s schema suddenly changed?</p>
+<p>I hope you are impressed by how quickly I processed and visualized the earthquake event data by choosing the simple and powerful ETL approach.<br>The computational benefit of transforming data in a massively-parallel data warehouse such as BigQuery would be even greater once I start extracting much more data continuously with a production-level extraction process such as <a href="https://articles.anelen.co/kinoko-io-etl/" target="_blank" rel="noopener">this one</a>.</p>
+<h2 id="A-word-of-caution"><a href="#A-word-of-caution" class="headerlink" title="A word of caution"></a>A word of caution</h2><p>I just demonstrated a case of efficiency gain with ELT.<br>However, ETL or ETLT can be more appropriate in other scenarios.<br>For example, masking or obfuscating personal identifiable data is very important before storing them in a data lake including Cloud Storage because it is much more costly to delete or modify a single record in a file partition after it’s loaded. (Think of a GDPR case a user requests a complete data erase.)</p>
+<h2 id="Extra-Animate-the-earthquake-events-on-the-map"><a href="#Extra-Animate-the-earthquake-events-on-the-map" class="headerlink" title="Extra: Animate the earthquake events on the map"></a>Extra: Animate the earthquake events on the map</h2><p><img src="/images/earthquakes_20200624.gif" alt="earthquakes"></p>
+<p>Above visualization was created with this <a href="https://colab.research.google.com/drive/1Ajf3VzqPxJpu9Vrq5EZTDRGRxP6HjXC0?usp=sharing" target="_blank" rel="noopener">source code</a></p>
+<p>I hope this introduction was informative and relatable to your business. If you would like to find out more what Anelen can do for your data challenge, please contact <a href="mailto:hello@anelen.co">hello@anelen.co</a> (.co, not .com don’t get your email lost elsewhere!) or schedule a free discovery meeting with the <a href="https://calendly.com/anelen-discovery" target="_blank" rel="noopener">scheduler</a>.</p>
+<p>Daigo Tanaka, CEO and Data Scientist @ ANELEN</p>
+</div></div></div></div><div class="paginator"><a class="prev" href="/2021/02/12/What-is-P-in-ELTP-Process/">PREV</a></div><section class="text-center text-white call-to-action" style="background: url(&quot;https://handoff.cloud/assets/img/work-life-light.jpg&quot;) center center / cover no-repeat;">
+    <div class="overlay" style="opacity: 1;background: rgba(33,37,41,0);"></div>
+    <div class="container" style="opacity: 1;">
+        <div class="row" style="width: 80%;margin-right: auto;margin-left: auto;padding: 20px;background: #FFF;">
+            <div class="col-xl-9 mx-auto">
+                <h1 class="mb-4" style="color: #00599C;">Make smarter decisions with your data today</h1>
+            </div>
+            <div class="col-md-10 col-lg-12 col-xl-9 mx-auto">
+                <form>
+                    <div class="form-row">
+                        <div class="col-12 col-md-12 col-lg-4 col-xl-4 offset-lg-2 offset-xl-1" style="padding-bottom: 20px;"><a class="btn btn-primary btn-block btn-lg" href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/handoff-demo/handoff-online-demo'});return false;">Book a Demo</a></div>
+                        <div class="col-lg-4 col-xl-4 offset-lg-1 offset-xl-1" style="padding-bottom: 20px;"><a class="btn btn-success &quot;btn btn-primary btn-block btn-lg" role="button" href="#" onclick="$(&#39;#contact-modal&#39;).modal(&#39;show&#39;);">Send an Email</a></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="footer bg-light">    <footer class="bg-light footer" style="background: linear-gradient(90deg, #00599C 98%, #00599C);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 text-center text-lg-left my-auto h-100">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item"><a href="https://anelen.co" target="_blank" rel="noopener" style="color: #FFF;">Powered by ANELEN</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="mailto:hello@handoff.cloud" style="color: #FFF;">Contact</a></li>
+                        <li class="list-inline-item"></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="https://anelen.co/privacy_policy.html" target="_blank" rel="noopener" style="color: #FFF;">Privacy Policy</a></li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">© Anelen Co., LLC 2021. All Rights Reserved.</p>
+                </div>
+                <div class="col-lg-5 text-center text-lg-right my-auto h-100">
+                    <ul class="list-inline mb-0 social">
+                        <li class="list-inline-item"><a href="https://www.facebook.com/anelendatascience/" target="_blank" rel="noopener"><i class="fa fa-facebook fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="https://twitter.com/handoffcloud" target="_blank" rel="noopener"><i class="fa fa-twitter fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="https://www.linkedin.com/company/anelen/" target="_blank" rel="noopener"><i class="fa fa-linkedin fa-2x fa-fw"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+<div class="container"></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script><script src="https://handoff.cloud/assets/js/script.min.js"></script></body></html>
