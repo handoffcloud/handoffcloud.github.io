@@ -1,7 +1,9 @@
 mixin postInfo(item)
     .post-info
         if item.image
-            img.img-fluid(href=item.from target="_blank" alt-text=item.title src=item.image)
+            a(href= url_for(item.path))
+              img.img-fluid(href=item.from target="_blank" alt-text=item.title src=item.image)
+            br
         if item.from && (is_home() || is_post())
             a.post-from(href=item.from target="_blank" title=item.from)
         if item.summary
@@ -10,8 +12,8 @@ mixin postInfo(item)
 
 //- Index Page
 mixin posts()
-    .col-sm-5.item 
-        - page.posts.each(function (item) {
+    - page.posts.each(function (item) {
+        .col-sm-6.item 
             article.post-block
                 h3.name
                     a.post-title-link(href= url_for(item.path))
@@ -20,7 +22,7 @@ mixin posts()
                 .post-content
                     != item.excerpt
                 a.read-more(href= url_for(item.path))!= __('more')
-        - })
+    - })
 
 //- Archive Page
 mixin postList()

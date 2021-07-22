@@ -3,6 +3,7 @@ title: 'Go schemaless: ELT with Google Cloud Storage and BigQuery'
 date: 2020-06-25 13:12:36
 image: "/images/earthquakes.png"
 canonical: "https://articles.anelen.co/elt-google-cloud-storage-bigquery/"
+summary: This article illustrates the advantages of keeping the primary data schemaless.
 ---
 ![USGS earthquake events map](/images/earthquakes.png)
 

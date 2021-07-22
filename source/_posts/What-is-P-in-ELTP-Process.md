@@ -9,6 +9,7 @@ tags:
   - analytics
 canonical: "https://articles.anelen.co/What-is-P-in-ELTP-Process/"
 image: "/images/iStock-1150767851.jpg"
+summary: "adding P to ELT, and it's Publishing. It's the process of publishing the post-transformation data to exactly where people or another program consume them. We call a frontline application in this article."
 ---
 ![data, where you need](/images/iStock-1150767851.jpg)
 
