@@ -11,7 +11,11 @@ mixin post()
     - var prev = page.prev ? page.prev.path : false;
     - var next = page.next ? page.next.path : false; 
     .paginator
-        if prev
-            a.prev(href=url_for(prev))!= __('prev_post')
-        if next
-            a.next(href=url_for(next))!= __('next_post')
+        .container
+            .row 
+                .col-sm-5.offset-sm-1
+                    if prev
+                        a.prev(href=url_for(prev))!= __('prev_post')
+                .col-sm-5
+                    if next
+                        a.next.float-right(href=url_for(next))!= __('next_post')
