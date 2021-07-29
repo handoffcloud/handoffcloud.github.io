@@ -133,3 +133,11 @@ pre {
 .paginator {
   margin: 20px;
 }
+
+.next {
+  text-transform: uppercase;
+}
+
+.prev {
+  text-transform: uppercase;
+}

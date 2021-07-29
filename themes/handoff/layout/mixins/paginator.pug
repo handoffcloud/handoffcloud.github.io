@@ -13,9 +13,11 @@ mixin post()
     .paginator
         .container
             .row 
-                .col-sm-5.offset-sm-1
+                .col-sm
                     if prev
                         a.prev(href=url_for(prev))!= __('prev_post')
-                .col-sm-5
+                .col-sm.text-center
+                    a.next(href="/")="home"
+                .col-sm
                     if next
                         a.next.float-right(href=url_for(next))!= __('next_post')
