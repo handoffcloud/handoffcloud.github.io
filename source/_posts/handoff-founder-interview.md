@@ -2,11 +2,11 @@
 title: handoff founder interview
 date: 2021-07-27 23:56:07
 tags:
-summary: "Learn the advantages of using handoff ELT for data analytics in this interview video."
+summary: "Discover the advantages of using handoff ELT for data analytics in this interview video."
 image: "/images/founder-interview-poster.jpg"
 ---
 
-Learn the advantages of using handoff ELT for data analytics.
+Discover the advantages of using handoff ELT for data analytics.
 Daigo Tanaka, founder of handoff.cloud answers everything you need to know about handoff.
 
 <video width="100%" controls poster="/images/founder-interview-poster.jpg">
