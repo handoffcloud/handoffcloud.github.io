@@ -1,5 +1,5 @@
 ---
-title: 'Video series: Conversation with users'
+title: 'Conversation with Pro: Adam Roderick @ Datateer'
 date: 2021-09-05 00:00:00
 tags:
 summary: "A conversation with Adam Roderick, CEO of Datateer. Find out how he identifies high-value questions for the data to answer in short term."
