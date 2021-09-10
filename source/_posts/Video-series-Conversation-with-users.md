@@ -1,6 +1,6 @@
 ---
 title: 'Video series: Conversation with users'
-date: 2021-08-02 15:29:26
+date: 2021-08-31 00:00:00
 tags:
 summary: "This page is a compilation of short videos"
 image: "/images/conversation-w-users-thumbnail.png"
@@ -9,5 +9,29 @@ image: "/images/conversation-w-users-thumbnail.png"
 Video fun! Here we will compile our video based on the conversations with
 our customers. Bite-size take aways for ELT best pratices from handoff 🖖
 
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">We can automate that for you!<a href="https://twitter.com/hashtag/ServerlessELT?src=hash&amp;ref_src=twsrc%5Etfw">#ServerlessELT</a> <a href="https://t.co/uquCYJFPSF">pic.twitter.com/uquCYJFPSF</a></p>&mdash; handoff (@handoffcloud) <a href="https://twitter.com/handoffcloud/status/1421351803321389061?ref_src=twsrc%5Etfw">July 31, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<video width="100%" controls poster="/images/handoff-ceo-excel.png">
+  <source src="https://handoff.cloud/assets/video/handoff-ceo-excel-square.m4v" type="video/x-m4v">
+Your browser does not support the video tag.
+</video>
+
+<video width="100%" controls poster="/images/handoff-pql-pipeline.png">
+  <source src="https://handoff.cloud/assets/video/handoff-pql-pipeline.m4v" type="video/x-m4v">
+Your browser does not support the video tag.
+</video>
+
+<video width="100%" controls poster="/images/open-source-elt.png">
+  <source src="https://handoff.cloud/assets/video/open-source-elt-square.m4v" type="video/x-m4v">
+Your browser does not support the video tag.
+</video>
+
+<video width="100%" controls poster="/images/blt.png">
+  <source src="https://handoff.cloud/assets/video/blt-square.m4v" type="video/x-m4v">
+Your browser does not support the video tag.
+</video>
+
+<video width="100%" controls poster="/images/how-not-to-do-serverless.png">
+  <source src="https://handoff.cloud/assets/video/how-not-to-do-serverless-square.m4v" type="video/x-m4v">
+Your browser does not support the video tag.
+</video>
+
 
