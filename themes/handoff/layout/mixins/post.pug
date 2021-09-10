@@ -13,7 +13,7 @@ mixin postInfo(item)
 //- Index Page
 mixin posts()
     - page.posts.each(function (item) {
-        .col-sm-6.item 
+        .col-md-6.item
             article.post-block
                 h3.name
                     a.post-title-link(href= url_for(item.path))

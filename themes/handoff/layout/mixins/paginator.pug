@@ -17,7 +17,10 @@ mixin post()
                     if prev
                         a.prev(href=url_for(prev))!= __('prev_post')
                 .col-sm.text-center
-                    a.next(href="/")="home"
+                    a.next(href="/")
+                        span="learn more 👇"
+                        br
+                        img(src="/images/blog-thumbnail.png", width="75%")
                 .col-sm
                     if next
                         a.next.float-right(href=url_for(next))!= __('next_post')
