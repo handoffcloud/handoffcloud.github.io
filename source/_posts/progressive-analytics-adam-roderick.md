@@ -5,7 +5,7 @@ tags:
 summary: "A conversation with Adam Roderick, CEO of Datateer. Find out how he identifies high-value questions for the data to answer in short term."
 image: "/images/progressive-analytics-adam-roderick.png"
 ---
-A conversation with Adam Roderick, CEO of Datateer. Find out how he identifies high-value questions for the data to answer in short term.
+A conversation with Adam Roderick, CEO of [Datateer](https://www.datateer.com). Find out how he identifies high-value questions for the data to answer in short term.
 
 <video width="100%" controls poster="/images/progressive-analytics-adam-roderick.png">
   <source src="https://handoff.cloud/assets/video/adam-roderick-progressive-analytics.m4v" type="video/x-m4v">
