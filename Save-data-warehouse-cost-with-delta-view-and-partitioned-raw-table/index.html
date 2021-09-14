@@ -1,0 +1,152 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Save data warehouse cost with delta view and partitioned raw table · handoff</title><meta name="description" content="Save data warehouse cost with delta view and partitioned raw table - handoff"><meta name="twitter:description" content="How can we avoid receiving unexpectedly expensive bill from the data warehouse providers? This article introduces a few ideas that helps to avoid the blowup and lower the overall warehouse cost."><meta name="twitter:title" content="Save data warehouse cost with delta view and partitioned raw table"><meta name="twitter:card" content="summary"><meta property="og:type" content="article"><meta name="description" content="How can we avoid receiving unexpectedly expensive bill from the data warehouse providers? This article introduces a few ideas that helps to avoid the blowup and lower the overall warehouse cost."><meta property="og:image" content="/images/delta-view.png"><meta property="og:title" content="Save data warehouse cost with delta view and partitioned raw table"><meta name="twitter:image" content="/images/delta-view.png"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="https://handoff.cloud/assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+<link rel="stylesheet" href="https://handoff.cloud/assets/fonts/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+<link rel="apple-touch-icon" sizes="57x57" href="https://handoff.cloud/assets/favicon/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="https://handoff.cloud/assets/favicon/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="https://handoff.cloud/assets/favicon/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="https://handoff.cloud/assets/favicon/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="https://handoff.cloud/assets/favicon/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="https://handoff.cloud/assets/favicon/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="https://handoff.cloud/assets/favicon/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="https://handoff.cloud/assets/favicon/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://handoff.cloud/assets/favicon/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="https://handoff.cloud/assets/favicon/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://handoff.cloud/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://handoff.cloud/assets/favicon/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://handoff.cloud/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="https://handoff.cloud/assets/favicon/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WEFXTPYJ54"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WEFXTPYJ54');
+</script>
+
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1121177037925150');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1121177037925150&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+<!-- Start of HubSpot Embed Code -->
+  <script type="text/javascript" id="hs-script-loader" async defer src="//js-na1.hs-scripts.com/20519252.js"></script>
+<!-- End of HubSpot Embed Code -->
+<meta name="description" content="delta view The worst nightmare of analytics managers is accidentally blowing up the data warehouse (DWH) cost. This could happen by accidentally running a query that scans the entire raw table that is">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Save data warehouse cost with delta view and partitioned raw table">
+<meta property="og:url" content="http://handoff.cloud/Save-data-warehouse-cost-with-delta-view-and-partitioned-raw-table/index.html">
+<meta property="og:site_name" content="handoff">
+<meta property="og:description" content="delta view The worst nightmare of analytics managers is accidentally blowing up the data warehouse (DWH) cost. This could happen by accidentally running a query that scans the entire raw table that is">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-09-14T10:28:29.000Z">
+<meta property="article:modified_time" content="2021-09-14T22:39:35.028Z">
+<meta property="article:author" content="handoff">
+<meta name="twitter:card" content="summary"><link rel="search" type="application/opensearchdescription+xml" href="http://handoff.cloud/atom.xml" title="handoff"><meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="handoff" type="application/atom+xml">
+</head><body><div class="modal fade" role="dialog" tabindex="-1" id="cookieconsent">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><strong>We are care about privacy and rights</strong></h4>
+        <button type="button" class="close hidden" data-dismiss="modal" aria-label="Close" id="acceptcookie1" style="visibility: hidden;"><span aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <p>So we want to let you know that we use cookies to track web visit data like many other commercial websites. We use them for a historical research to improve the visitor and customer experience. If you continue using our website, we'll assume that you agree to receive all cookies on this website.&nbsp;<a href="https://www.iubenda.com/privacy-policy/8056022" target="_blank" rel="noopener">Learn&nbsp;more</a></p>
+      </div>
+      <div class="modal-footer" style="background-image: url('https://anelen.co/assets/img/logo.png');background-size: contain;background-repeat: no-repeat;background-position: 10% 10%;margin: 15px;border-top: 0px;">
+        <button class="btn btn-primary" id="acceptcookie2" data-dismiss="modal" type="button">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+<nav class="navbar navbar-light navbar-expand-md navigation-clean-button"><div class="container"><a class="navbar-brand" href="https://handoff.cloud" target="_self"></a><div class="text-center"><a class="navbar-brand" href="https://handoff.cloud"><img class="navbar-brand" src="https://handoff.cloud/assets/img/handoff-white.png"><span class="text-center"><strong>handoff</strong></span></a></div><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button><div class="collapse navbar-collapse" id="navcol-1"><ul class="nav navbar-nav mr-auto"><li class="nav-item" role="presentation"><!-- - var tar = re.test(value) ? "_blank" : "_self"--><a class="nav-link" href="https://handoff.cloud/price.html" target="_self">Pricing</a></li><li class="nav-item" role="presentation"><!-- - var tar = re.test(value) ? "_blank" : "_self"--><a class="nav-link" href="https://dev.handoff.cloud" target="_self">Open Source</a></li><li class="nav-item" role="presentation"><!-- - var tar = re.test(value) ? "_blank" : "_self"--><a class="nav-link" href="/" target="_self">Learn</a></li></ul></div></div></nav><div class="article-clean"><div class="container"><div class="row"> </div><div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2"><div class="intro"><h1 class="text-center">Save data warehouse cost with delta view and partitioned raw table</h1></div><!-- +postInfo(page)--><div class="post-content"><p><a href="/images/delta-view.png">delta view</a></p>
+<p>The worst nightmare of analytics managers is accidentally blowing up the data warehouse (DWH) cost. This could happen by accidentally running a query that scans the entire raw table that is huge. Even when the table is not at the petabyte scale, the accumulation of repeated queries could add up to.</p>
+<p>The above scenario is especially true when you are using BigQuery, AWS Athena, or Redshift Spectrum whose cost is tied to the total data scanned by queries. When you are billed by the computational capacity purchase as in Snowplow and Redshift, you may be shielded from such incidents, but your DWH performance gets severely impacted by costly queries.</p>
+<ul>
+<li>How can we avoid receiving unexpectedly expensive bills from the BigQuery/Athena/Redshift Spectrum?</li>
+<li>How can we keep our queries efficient so we don’t need to increase the over cost from DWH and operational inefficiency?</li>
+</ul>
+<p>This article introduces basic ideas that help you avoid the blowup and lower the overall cost.</p>
+<h2 id="Enforcing-partitions-to-the-raw-tables"><a href="#Enforcing-partitions-to-the-raw-tables" class="headerlink" title="Enforcing partitions to the raw tables"></a>Enforcing partitions to the raw tables</h2><p>The first thing you can do is to enforce partitions on the raw tables. The big tables are almost always tied to the day-to-day ingestion of the raw data. The DWH can internally divide the big data into chunks, typically based on one of the timestamp columns in the table. The smaller chunks in the table are called partitions.</p>
+<p>When you scan the partition with a specific range of timestamps, DWH scans only the partitions that fall into the range. That way, your query finishes fast with smaller data scanned. In most DWHs, you can set up to make the timestamp range always required by query to avoid scanning the entire table by accident.</p>
+<p>Note: If you are a BigQuery user, <a href="https://github.com/anelendata/target-bigquery" target="_blank" rel="noopener">ANELEN’s target-bigquery-partition</a> loader does this automatically. We can also help you set up partitions for other DWHs. Just let us know by dropping an email to <a href="mailto:hello@handoff.cloud">hello@handoff.cloud</a>.</p>
+<h2 id="Set-up-materialized-tables"><a href="#Set-up-materialized-tables" class="headerlink" title="Set up materialized tables"></a>Set up materialized tables</h2><p>The raw tables are cleaned and aggregated before they are put to use. You may be doing so by defining SQL views. Such views may be hooked to your dashboard. So, every time someone opens the dashboard, the DWH may be executing a query through the views.</p>
+<p>You should pay extra attention to this if you are using dbt which encourages the use of views by design. Unless the view is configured to be automatically “materialized”, or to cache the query result for the repeated requests, the view is tapping on the raw data each time someone sends the query. This could also cause a higher cost and performance issue.</p>
+<p>One explicit way of avoiding the costly scanning of raw tables is to periodically replicate the view result into a separate table. Let’s call it materialized table. If your dashboard just needs daily updates, you can run a job to refresh the materialized table. Some DWHs such as BigQuery have schedule features so you don’t have to do it manually. Otherwise, you can define a job in Airflow or dbt cloud.</p>
+<h2 id="Use-delta-view-to-get-fresh-data-efficiently"><a href="#Use-delta-view-to-get-fresh-data-efficiently" class="headerlink" title="Use delta view to get fresh data efficiently"></a>Use delta view to get fresh data efficiently</h2><p>One problem with the above approach is data freshness. Say, your data extractor (StitchData, Fivetran, Airflow, etc) pulls data from the source every hour but materialization happens daily basis. By accessing the materialized table, you only get yesterday’s metrics and of course, you want to peek at today’s intra-day progress. The so-called delta view will help you achieve that.</p>
+<p>A delta view combines the raw data and the materialized table to synthesize the most recent data efficiently. First, it pulls out the pre-aggregated data from the materialized table. Then it checks the latest timestamp of the pulled data. Using the timestamp, it pulls the “delta” by scanning the raw table with the timestamp. This way, the delta view utilizes the best of both the raw table and the materialized table.</p>
+<p>Here is an example dbt macro of delta view. The script also de-duplicates the rows based on the primary keys and the replication timestamp:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&#123;% macro incr_dedup_snapshot(source_row, destination_row, primary_keys, tstamp_key) %&#125;</span><br><span class="line">WITH</span><br><span class="line">_target AS (</span><br><span class="line">  SELECT *</span><br><span class="line">  FROM &#123;&#123; destination_row &#125;&#125;</span><br><span class="line">),</span><br><span class="line">_new AS (</span><br><span class="line">  SELECT *,</span><br><span class="line">  CURRENT_TIMESTAMP() AS _row_updated_at</span><br><span class="line">  FROM &#123;&#123; source_row &#125;&#125;</span><br><span class="line">  WHERE &#123;&#123; tstamp_key &#125;&#125; &gt; (</span><br><span class="line">    SELECT COALESCE(MAX( &#123;&#123; tstamp_key &#125;&#125; ), TIMESTAMP &#39;1970-01-01&#39;)</span><br><span class="line">    FROM &#123;&#123; destination_row &#125;&#125;</span><br><span class="line">  )</span><br><span class="line">),</span><br><span class="line">_dup AS (</span><br><span class="line">  SELECT * FROM _target</span><br><span class="line">  UNION ALL</span><br><span class="line">  SELECT * FROM _new</span><br><span class="line">),</span><br><span class="line">_deduped AS (</span><br><span class="line">  SELECT o.*</span><br><span class="line">  FROM _dup AS o</span><br><span class="line">  INNER JOIN (</span><br><span class="line">    SELECT</span><br><span class="line">&#123;% for key in primary_keys %&#125;</span><br><span class="line">      &#123;&#123; key &#125;&#125;,</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line">      MAX(&#123;&#123; tstamp_key &#125;&#125;) AS &#123;&#123; tstamp_key &#125;&#125;,</span><br><span class="line">      MAX(_row_updated_at) AS _row_updated_at</span><br><span class="line">    FROM _dup</span><br><span class="line">    GROUP BY</span><br><span class="line">    &#123;% for key in primary_keys %&#125;</span><br><span class="line">    &#123;&#123; key &#125;&#125;&#123;% if not loop.last %&#125;,&#123;% endif %&#125;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">  ) AS oo</span><br><span class="line">ON o._row_updated_at &#x3D; oo._row_updated_at</span><br><span class="line">AND o.&#123;&#123; tstamp_key &#125;&#125; &#x3D; oo.&#123;&#123; tstamp_key &#125;&#125;</span><br><span class="line">&#123;% for key in primary_keys %&#125;</span><br><span class="line">  AND o.&#123;&#123; key &#125;&#125; &#x3D; oo.&#123;&#123; key &#125;&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line">)</span><br><span class="line">SELECT * FROM _deduped</span><br><span class="line">&#123;% endmacro %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>You can use this delta view definition to update the materialized table. Then the updated materialized table is referred to by the delta view next time someone wants the up-to-date data.</p>
+<h2 id="Seamlessly-run-extraction-and-materialization"><a href="#Seamlessly-run-extraction-and-materialization" class="headerlink" title="Seamlessly run extraction and materialization"></a>Seamlessly run extraction and materialization</h2><p>Delta view works by coordinating data extraction and materialization. You may do so by:</p>
+<ol>
+<li>Schedule data extraction by StitchData, Fivetran, or create a task in Airflow.</li>
+<li>Define delta views. We recommend managing it with dbt with a macro like in the example above.</li>
+<li>Schedule the materialization by DWH’s scheduling feature if available or set up a job by yourself.</li>
+</ol>
+<p>These steps may sound complex and the efficient coordination between the schedules at Step 1 &amp; 3 could be tricky.</p>
+<p>Note: handoff.cloud can run all 3 steps together whenever the data is replicated. This seamless delta view process resolves the coordination issues and generates the most up-to-date data with the lowest query cost. Plus, our fully customizable service can integrate data from the applications not supported by existing connectors in the market. We can also support more complex ELT logic and custom transformations. Learn more at <a href="https://handoff.cloud">handoff.cloud</a></p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>As your data and team grow bigger, the query cost and efficiency become a headache to analytics managers. The use of a partitioned table and the materialized table save you DWH cost and increase the cluster efficiency. Delta views are an efficient way of pulling up-to-date metrics while keeping the query cost low.</p>
+</div></div></div></div><div class="paginator"><div class="container"><div class="row"> <div class="col-sm"></div><div class="col-sm text-center"><a class="next" href="/"><span>learn more 👇</span><br><img src="/images/blog-thumbnail.png" width="75%"></a></div><div class="col-sm"><a class="next float-right" href="/progressive-analytics-adam-roderick/">NEXT</a></div></div></div></div><section class="text-center text-white call-to-action" style="background: url(&quot;https://handoff.cloud/assets/img/work-life-light.jpg&quot;) center center / cover no-repeat;">
+    <div class="overlay" style="opacity: 1;background: rgba(33,37,41,0);"></div>
+    <div class="container" style="opacity: 1;">
+        <div class="row" style="width: 80%;margin-right: auto;margin-left: auto;padding: 20px;background: #FFF;">
+            <div class="col-xl-9 mx-auto">
+                <h1 class="mb-4" style="color: #00599C;">Make smarter decisions with your data today</h1>
+            </div>
+            <div class="col-md-10 col-lg-12 col-xl-9 mx-auto">
+                <form>
+                    <div class="form-row">
+                        <div class="col-12 col-md-12 col-lg-4 col-xl-4 offset-lg-2 offset-xl-1" style="padding-bottom: 20px;"><a class="btn btn-primary btn-block btn-lg" href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/handoff-demo/handoff-online-demo'});return false;">Book a Demo</a></div>
+                        <div class="col-lg-4 col-xl-4 offset-lg-1 offset-xl-1" style="padding-bottom: 20px;"><a class="btn btn-success &quot;btn btn-primary btn-block btn-lg" role="button" href="#" onclick="$(&#39;#contact-modal&#39;).modal(&#39;show&#39;);">Send an Email</a></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<footer class="footer bg-light">    <footer class="bg-light footer" style="background: linear-gradient(90deg, #00599C 98%, #00599C);">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 text-center text-lg-left my-auto h-100">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item"><a href="https://anelen.co" target="_blank" rel="noopener" style="color: #FFF;">Powered by ANELEN</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="mailto:hello@handoff.cloud" style="color: #FFF;">Contact</a></li>
+                        <li class="list-inline-item"></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="https://anelen.co/privacy_policy.html" target="_blank" rel="noopener" style="color: #FFF;">Privacy Policy</a></li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">© Anelen Co., LLC 2021. All Rights Reserved.</p>
+                </div>
+                <div class="col-lg-5 text-center text-lg-right my-auto h-100">
+                    <ul class="list-inline mb-0 social">
+                        <li class="list-inline-item"><a href="https://www.facebook.com/anelendatascience/" target="_blank" rel="noopener"><i class="fa fa-facebook fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="https://twitter.com/handoffcloud" target="_blank" rel="noopener"><i class="fa fa-twitter fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="https://www.linkedin.com/company/anelen/" target="_blank" rel="noopener"><i class="fa fa-linkedin fa-2x fa-fw"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+<div class="container"></div></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script><script src="https://handoff.cloud/assets/js/script.min.js"></script></body></html>
