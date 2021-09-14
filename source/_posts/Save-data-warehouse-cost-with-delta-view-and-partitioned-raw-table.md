@@ -6,7 +6,7 @@ summary: "How can we avoid receiving unexpectedly expensive bill from the data w
 tags:
 ---
 
-[delta view](/images/delta-view.png)
+![delta view](/images/delta-view.png)
 
 The worst nightmare of analytics managers is accidentally blowing up the data warehouse (DWH) cost. This could happen by accidentally running a query that scans the entire raw table that is huge. Even when the table is not at the petabyte scale, the accumulation of repeated queries could add up to.
 
