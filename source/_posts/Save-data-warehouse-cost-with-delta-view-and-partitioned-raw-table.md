@@ -103,14 +103,14 @@ _events_delta_new AS (
       {{ key }}{% if not loop.last %},{% endif %}
 {% endfor %}
     FROM {{ historical_table }}
-    WHERE DATETIME_ADD({{ current_date }}, INTERVAL -{{ lookback }} day) < CAST({{ event_tstamp_key }} AS DATETIME)
+    WHERE DATE_ADD({{ current_date }}, INTERVAL -{{ lookback }} day) < CAST({{ event_tstamp_key }} AS DATE)
   ) AS p
       ON 1=1
 {% for key in primary_keys %}
             AND n.{{ key }} = p.{{ key }}
 {% endfor %}
 {% endif %}
-  WHERE DATETIME_ADD({{ current_date }}, INTERVAL -{{ lookback }} day) <= CAST(n.{{ etl_tstamp_key }} AS DATETIME)
+  WHERE DATE_ADD({{ current_date }}, INTERVAL -{{ lookback }} day) <= CAST(n.{{ etl_tstamp_key }} AS DATE)
     AND DATETIME_ADD({{ current_date }}, INTERVAL -{{ lookback }} day) < CAST(n.{{ event_tstamp_key }} AS DATETIME)
 {% if historical_table %}
 {% for key in primary_keys %}
