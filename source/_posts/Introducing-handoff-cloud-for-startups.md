@@ -29,7 +29,7 @@ How do you synthesize the data from zillion sources to get the whole picture of 
 You need an analytics engine (data warehouse and data pipelines) to bring the data to where decisions take place.
 
 
-[🗓️ Book a FREE CONSULTING session with us.](https://handoff.cloud/book.html)
+[🗓️ Book a FREE & No Pressure Consulting session with us.](https://handoff.cloud/book.html)
 
 
 ## $$$ Thought Data Engineering is expensive?
@@ -42,7 +42,7 @@ Can your startup afford that?
 
 With handoff.cloud, you can have the modern data stack today. **Our starting contract is LESS THAN $10K a year. WOW!**
 
-[🗓️ Book a FREE CONSULTING session with us.](https://handoff.cloud/book.html)
+[🗓️ Book a FREE & No Pressure Consulting session with us.](https://handoff.cloud/book.html)
 
 
 ## Case Studies: See how we helped FAST companies
@@ -59,7 +59,7 @@ Those are just a few examples of how we have helped fast companies. **Read what 
 
 "ANELEN's team is absolutely outstanding. We closed our last round with a prominent VC in great part due to the data visibility we provided to investors through ANELEN's work." - Konstantin, Zvereff CEO, BlueCart Inc.
 
-[🗓️ Book a FREE CONSULTING session with us.](https://handoff.cloud/book.html)
+[🗓️ Book a FREE & No Pressure Consulting session with us.](https://handoff.cloud/book.html)
 
 ## A tailor-made service built on cutting-edge technology
 
@@ -78,7 +78,7 @@ We architected handoff technology from zero, utilizing a unique serverless appro
 ...without worrying about maintaining the infrastructure!
 
 
-[🗓️ Book a FREE CONSULTING session with us.](https://handoff.cloud/book.html)
+[🗓️ Book a FREE & No Pressure Consulting session with us.](https://handoff.cloud/book.html)
 
 
 ## Active Monitoring Service: We'll keep our eyes on the data flow for you
@@ -104,7 +104,7 @@ Until now, your only option was to hire a full-time data engineer.
 
 ![monitoring](/images/handoff-ui.gif)
 
-[🗓️ Book a FREE CONSULTING session with us.](https://handoff.cloud/book.html)
+[🗓️ Book a FREE & No Pressure Consulting session with us.](https://handoff.cloud/book.html)
 
 Now you can reliably keep the data flowing to where decisions take place without hiring a data engineer. ANELEN's mission is to help innovative businesses make smarter decisions with data. handoff.cloud achieves the engineering part of the big mission. Please send me an email at daigo@anelen.co (.co not .com) anytime to discuss how I can help!
 
