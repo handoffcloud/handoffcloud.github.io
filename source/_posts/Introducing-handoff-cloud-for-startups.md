@@ -49,9 +49,9 @@ With handoff.cloud, you can have the modern data stack today. **Our starting con
 
 handoff.cloud is an end-to-end service for your data Extraction, Loading, and Transformation needs.
 
-- The product analytics team is an expert in SQL, but the analysis does not begin without the source data in the data warehouse.
-- The marketing team should be evaluated for the quality of the leads, not quantity. Product qualified lead generation is the way to go for the freemium model, but you need custom engineering to close the feedback loop from the product usage.
-- The customer success team should have well-defined customer health metrics. And they should be talking to at-risk customers, not spending time manually importing & exporting data to Excel and Zendesk.
+- **The product analytics team** is an expert in SQL, but the analysis does not begin without the source data in the data warehouse.
+- **The marketing team** should be evaluated for the quality of the leads, not quantity. Product qualified lead generation is the way to go for the freemium model, but you need custom engineering to close the feedback loop from the product usage.
+- **The customer success** team should have well-defined customer health metrics. And they should be talking to at-risk customers, not spending time manually importing & exporting data to Excel and Zendesk.
 
 Those are just a few examples of how we have helped fast companies. **Read what our customers are saying about us:**
 
